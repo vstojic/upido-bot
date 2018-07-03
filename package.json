@@ -1,17 +1,22 @@
 {
   "name": "upido-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Upido Bot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node index.js"
+    "start": "node index.js"
   },
-  "author": "",
+  "author": "Vladica Stojic <vladica.stojic@upido.it> (http://upido.it)",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
-    "express": "^4.16.3"
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "moment": "^2.22.0",
+    "mongoose": "^5.1.6",
+    "telebot": "^1.2.5"
   }
 }

@@ -1,16 +1,18 @@
 'use strict';
 
-require('dotenv').config();
+require('dotenv').config(); // load .env into process.env
 
 const axios = require('axios');
-//const fs = require('fs');
-//const pathDirName = require('path').dirname();
-const faker = require('faker');
-//const ocrSpaceApi = require('./ocr-space-api');
-const ocrSpaceApi = require('./ocrSpaceApi');
 
-const UPIDO_BOT_URL   = process.env.UPIDO_BOT_URL;
-const UPIDO_BOT_TOKEN = process.env.UPIDO_BOT_TOKEN;
+const ocr   = require('./ocr-space-api');
+
+const UPIDO_BOT_URL           = process.env.UPIDO_BOT_URL;
+const UPIDO_BOT_TOKEN         = process.env.UPIDO_BOT_TOKEN;
+const UPIDO_OCR_SPACE_API_KEY = process.env.UPIDO_OCR_SPACE_API_KEY;
+
+const _ocr_space_options = { // See https://ocr.space/ocrapi#PostParameters
+    apikey: UPIDO_OCR_SPACE_API_KEY //vladica.stojic@upido.it
+};
 
 //class Axios {
 //    constructor() {
@@ -82,18 +84,18 @@ fetchFileAsArrayBuffer(fileId, callback = (data, err)) {
 parseImage : function 
 parseImage(req, callback = (words, err)) {
 
-    let {message} = req.body;
+    const {message} = req.body;
 
     if (message && message.document) {
         exports.fetchFileAsArrayBuffer(message.document.file_id,
-            (data, err) => ocrSpaceApi.parseImageData(data
+            (data, err) => ocr.parseImageData(data, _ocr_space_options
                 ).then(result => {
                     callback(result.parsedWords, null);
                 }).catch(error => callback(null, err))
         );
     } else if (message && message.photo) {
         exports.fetchFileAsArrayBuffer(message.photo[message.photo.length - 1].file_id, 
-            (data, err) => ocrSpaceApi.parseImageData(data
+            (data, err) => ocr.parseImageData(data, _ocr_space_options
                 ).then(result => {
                     callback(result.parsedWords, null);
                 }).catch(error => callback(null, err))
@@ -107,11 +109,3 @@ parseImage(req, callback = (words, err)) {
 
 //}
 //module.exports = new Axios();
-
-function test() {
-    exports.buildFileUrl('BQADBAADFQUAAvFkuFGulu3cgX9_ugI',
-        url => { console.log(url); }
-    );
-}
-
-//test();
