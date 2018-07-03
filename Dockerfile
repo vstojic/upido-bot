@@ -9,7 +9,7 @@ WORKDIR /usr/src/upido-bot
 COPY package*.json ./
 
 #RUN npm install
-RUN npm install --save express axios body-parser
+RUN npm install --save express axios body-parser dotenv faker moment mongoose
 # If you are building your code for production
 # RUN npm install --only=production
 

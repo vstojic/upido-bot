@@ -16,7 +16,6 @@
     "express": "^4.16.3",
     "faker": "^4.1.0",
     "moment": "^2.22.0",
-    "mongoose": "^5.1.6",
-    "telebot": "^1.2.5"
+    "mongoose": "^5.1.6"
   }
 }
