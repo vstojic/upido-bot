@@ -41,7 +41,7 @@ process.on('SIGINT', function() {
 
 var exports = module.exports = {
     findAllTrackingNr : function findAllTrackingNr(
-        callback = (docs) => { console.log(JSON.stringify( { docs } )); } 
+        callback = docs => { console.log(JSON.stringify( { docs } )); } 
 	) {
         UpidoModel.findAllTrackingNr()
             .then(docs => { callback(docs); })
@@ -49,9 +49,17 @@ var exports = module.exports = {
     },
     findByTrackingNr : function findByTrackingNr(
         trackingNr,
-        callback = (docs) => { console.log(JSON.stringify( { docs } )); }
+        callback = docs => { console.log(JSON.stringify( { docs } )); }
 	) {
         UpidoModel.findByTrackingNr(trackingNr)
+            .then(docs => { callback(docs); })
+            .catch(err => { console.error(err); });
+	},
+    findByTrackingNrArray : function findByTrackingNrArray(
+        trackingNrArray,
+        callback = docs => { console.log(JSON.stringify( { docs } )); }
+	) {
+        UpidoModel.findByTrackingNrArray(trackingNrArray)
             .then(docs => { callback(docs); })
             .catch(err => { console.error(err); });
 	}
@@ -60,12 +68,15 @@ var exports = module.exports = {
 function test() {
     exports.findAllTrackingNr(nrs => { 
         console.log(nrs.length); 
-        nrs.map(nr =>
-            exports.findByTrackingNr(
-                nr, 
-                docs => docs.map(d => console.log(d.tracking_nr))
-            )
-        );
+        exports.findByTrackingNrArray(nrs, docs => {
+            console.log(docs.length); 
+            docs.map(d =>
+                exports.findByTrackingNr(
+                    d.tracking_nr, 
+                    docs => docs.map(d => console.log(d.tracking_nr))
+                )
+            );
+        });
     });
 }
 

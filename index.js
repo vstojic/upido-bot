@@ -48,22 +48,26 @@ app.post('/webhook', function(req, res) {
   if (message && message.document || message && message.photo) {
     
     axios.parseImage(req, (words, err) => { 
-      axios.sendMarkdownMessage(req, res, message.chat.id,
-        '*Many thanks for posting this image.* ' +
-        'Total *' + words.length + '* word(s) have been parsed from it: ' + os.EOL + os.EOL + 
-        words.map(w => '/' + w).join(os.EOL) + os.EOL + os.EOL +
-        'For each valid tracking number, a delivery time prediction is pending. Please, remain patient.'
-      );
-      words.map(w => db.findByTrackingNr(w, docs => { 
-          docs.map(d => axios.sendMarkdownMessage(req, res, message.chat.id,
-            '*Delivery time prediction for tracking number:* /' + d.tracking_nr + os.EOL + os.EOL +
-            '`When ordering                             `  *' + moment(d.ordering_dtp).format('LLLL')        + '*' + os.EOL +
-            '`Before leaving the country of origin      `  *' + moment(d.country_of_orig_dtp).format('LLLL') + '*' + os.EOL +
-            '`After reaching the country of destination `  *' + moment(d.country_of_dest_dtp).format('LLLL') + '*' + os.EOL +
-            '`After reaching the final local post office`  *' + moment(d.local_po_dtp).format('LLLL')        + '*' + os.EOL +
-            '`Final real delivery time                  `  *' + moment(d.final_real_dt).format('LLLL')       + '*' + os.EOL + os.EOL
+      db.findByTrackingNrArray(words, docs => {
+        axios.postMarkdownMessage(message.chat.id,
+          '*Many thanks for posting this image.* ' + 
+          'Total *' + words.length + '* word(s) have been parsed from it. ' + 
+          'However, only *' + docs.length + '* word(s) appear to be valid tracking numbers at the moment: ' + os.EOL + os.EOL + 
+          docs.map(d => '/' + d.tracking_nr).join(os.EOL) + os.EOL + os.EOL +
+          'For each valid tracking number, a delivery time prediction is pending. Please, remain patient and feel free to post further images.'
+        ).then(response => {
+          docs.map(d => axios.postMarkdownMessage(message.chat.id,
+                '*Delivery time prediction for tracking number:* /' + d.tracking_nr + os.EOL + os.EOL +
+                '`When ordering                             `  *' + moment(d.ordering_dtp).format('LLLL')        + '*' + os.EOL +
+                '`Before leaving the country of origin      `  *' + moment(d.country_of_orig_dtp).format('LLLL') + '*' + os.EOL +
+                '`After reaching the country of destination `  *' + moment(d.country_of_dest_dtp).format('LLLL') + '*' + os.EOL +
+                '`After reaching the final local post office`  *' + moment(d.local_po_dtp).format('LLLL')        + '*' + os.EOL +
+                '`Final real delivery time                  `  *' + moment(d.final_real_dt).format('LLLL')       + '*' + os.EOL + os.EOL
           ));
-    }))});
+          res.end('ok');
+        }).catch(err => { res.end('ERROR: ' + err); });
+      });
+    });
     return res.end();
   }
   

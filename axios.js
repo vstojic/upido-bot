@@ -21,10 +21,10 @@ const _ocr_space_options = { // See https://ocr.space/ocrapi#PostParameters
 
 var exports = module.exports = {
 
-sendMarkdownMessage : function 
-sendMarkdownMessage(req, res, chat_id, text) {
+postMarkdownMessage : function 
+postMarkdownMessage(chat_id, text) {
 
-  axios.post(UPIDO_BOT_URL + '/sendMessage', {
+  return axios.post(UPIDO_BOT_URL + '/sendMessage', {
     chat_id              : chat_id,
     parse_mode           : 'Markdown',
     text                 : text,
@@ -33,7 +33,13 @@ sendMarkdownMessage(req, res, chat_id, text) {
     //  [ { text : 'Display Avatar', url : obj.shopper.avatar },
     //    { text : 'Display Image', url : obj.shopper.image } ] 
     //  ] }
-    }).then(response => {
+    });
+},
+sendMarkdownMessage : function 
+sendMarkdownMessage(req, res, chat_id, text) {
+
+  this.postMarkdownMessage(chat_id, text)
+    .then(response => {
         //console.log(JSON.stringify( { response : response } ));
         res.end('ok');
     }).catch(err => {
