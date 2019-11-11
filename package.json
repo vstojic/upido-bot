@@ -16,6 +16,6 @@
     "express": "^4.16.3",
     "faker": "^4.1.0",
     "moment": "^2.22.0",
-    "mongoose": "^5.1.6"
+    "mongoose": "^5.7.5"
   }
 }
