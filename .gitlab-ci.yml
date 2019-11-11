@@ -19,10 +19,10 @@ cache:
 
 test_async:
   script:
-    - npm install
+    - npm install --save express axios body-parser dotenv faker moment mongoose
     - node ./index.js ./axios.js ./db.js ./ocr-space-api.js ./upido-faker.js
 
 test_db:
   script:
-    - npm install
+    - npm install --save express axios body-parser dotenv faker moment mongoose
     - node ./index.js ./axios.js ./db.js ./ocr-space-api.js ./upido-faker.js
