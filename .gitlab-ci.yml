@@ -20,9 +20,9 @@ cache:
 test_async:
   script:
     - npm install
-    - node ./index.js ./axios.js ./db.js ./ocr.space-api.js ./upido-faker.js
+    - node ./index.js ./axios.js ./db.js ./ocr-space-api.js ./upido-faker.js
 
 test_db:
   script:
     - npm install
-    - node ./index.js ./axios.js ./db.js ./ocr.space-api.js ./upido-faker.js
+    - node ./index.js ./axios.js ./db.js ./ocr-space-api.js ./upido-faker.js
